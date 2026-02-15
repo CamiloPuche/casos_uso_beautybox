@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beauty Box — Casos de Uso</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #F472B6;
+    --pink-light: #FDE8F4;
+    --rose: #E11D48;
+    --violet: #7C3AED;
+    --violet-light: #EDE9FE;
+    --teal: #0D9488;
+    --teal-light: #CCFBF1;
+    --amber: #D97706;
+    --amber-light: #FEF3C7;
+    --navy: #0F172A;
+    --slate: #334155;
+    --muted: #94A3B8;
+    --bg: #F8F5FF;
+    --white: #FFFFFF;
+    --card: #FFFFFF;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--navy);
+    min-height: 100vh;
+    padding: 40px 24px;
+    background-image:
+      radial-gradient(ellipse at 10% 10%, rgba(244,114,182,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(124,58,237,0.08) 0%, transparent 50%);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+  }
+  .header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--pink), var(--violet));
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--navy);
+    margin-bottom: 12px;
+  }
+  h1 span {
+    background: linear-gradient(135deg, var(--pink), var(--violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle {
+    font-size: 17px;
+    color: var(--muted);
+    font-weight: 400;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, #E2E8F0, transparent);
+  }
+
+  /* ── MAIN FLOW DIAGRAM ── */
+  .flow-section {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+  }
+
+  .flow-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .flow-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* ── USE CASE CARDS ── */
+  .use-cases-grid {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+
+  .uc-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 28px;
+    border: 1.5px solid #F1F5F9;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  .uc-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 20px 20px 0 0;
+  }
+  .uc-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    border-color: transparent;
+  }
+  .uc-card.pink::before   { background: linear-gradient(90deg, #F472B6, #EC4899); }
+  .uc-card.violet::before { background: linear-gradient(90deg, #7C3AED, #6D28D9); }
+  .uc-card.teal::before   { background: linear-gradient(90deg, #0D9488, #0F766E); }
+  .uc-card.amber::before  { background: linear-gradient(90deg, #D97706, #B45309); }
+  .uc-card.rose::before   { background: linear-gradient(90deg, #E11D48, #BE123C); }
+  .uc-card.indigo::before { background: linear-gradient(90deg, #4F46E5, #4338CA); }
+
+  .uc-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+  .uc-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .pink .uc-icon   { background: #FDF2F8; }
+  .violet .uc-icon { background: #F5F3FF; }
+  .teal .uc-icon   { background: #F0FDFA; }
+  .amber .uc-icon  { background: #FFFBEB; }
+  .rose .uc-icon   { background: #FFF1F2; }
+  .indigo .uc-icon { background: #EEF2FF; }
+
+  .uc-id {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .uc-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.3;
+  }
+
+  .uc-actor {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+  }
+  .pink .uc-actor   { background: #FDF2F8; color: #DB2777; }
+  .violet .uc-actor { background: #F5F3FF; color: #7C3AED; }
+  .teal .uc-actor   { background: #F0FDFA; color: #0D9488; }
+  .amber .uc-actor  { background: #FFFBEB; color: #D97706; }
+  .rose .uc-actor   { background: #FFF1F2; color: #E11D48; }
+  .indigo .uc-actor { background: #EEF2FF; color: #4F46E5; }
+
+  .uc-steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .uc-steps li {
+    display: flex;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--slate);
+  }
+  .step-num {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .pink .step-num   { background: #FDF2F8; color: #DB2777; }
+  .violet .step-num { background: #F5F3FF; color: #7C3AED; }
+  .teal .step-num   { background: #F0FDFA; color: #0D9488; }
+  .amber .step-num  { background: #FFFBEB; color: #D97706; }
+  .rose .step-num   { background: #FFF1F2; color: #E11D48; }
+  .indigo .step-num { background: #EEF2FF; color: #4F46E5; }
+
+  .uc-result {
+    margin-top: 16px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pink .uc-result   { background: #FDF2F8; color: #DB2777; }
+  .violet .uc-result { background: #F5F3FF; color: #7C3AED; }
+  .teal .uc-result   { background: #F0FDFA; color: #0D9488; }
+  .amber .uc-result  { background: #FFFBEB; color: #D97706; }
+  .rose .uc-result   { background: #FFF1F2; color: #E11D48; }
+  .indigo .uc-result { background: #EEF2FF; color: #4F46E5; }
+
+  /* ── ARCHITECTURE MAP ── */
+  .arch-section {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+  }
+
+  .arch-map {
+    background: var(--navy);
+    border-radius: 24px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .arch-map::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(244,114,182,0.15) 0%, transparent 40%),
+      radial-gradient(ellipse at 80% 80%, rgba(124,58,237,0.15) 0%, transparent 40%);
+  }
+
+  .arch-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+  }
+
+  .arch-node {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 14px 20px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: all 0.2s;
+    min-width: 130px;
+  }
+  .arch-node:hover {
+    background: rgba(255,255,255,0.15);
+    transform: scale(1.03);
+  }
+  .arch-node-icon { font-size: 22px; margin-bottom: 6px; }
+  .arch-node-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 2px;
+  }
+  .arch-node-port {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+  }
+  .arch-node.highlight {
+    background: linear-gradient(135deg, rgba(244,114,182,0.3), rgba(124,58,237,0.3));
+    border-color: rgba(244,114,182,0.5);
+  }
+
+  .arch-arrow {
+    color: rgba(255,255,255,0.3);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .arch-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    text-align: center;
+    margin: 16px 0 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .arch-kafka {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(13,148,136,0.2);
+    border: 1px solid rgba(13,148,136,0.4);
+    border-radius: 12px;
+    padding: 12px 24px;
+    position: relative;
+    z-index: 1;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  .kafka-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: #5EEAD4;
+    background: rgba(13,148,136,0.3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+  .kafka-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 500;
+  }
+
+  /* ── STATUS FLOW ── */
+  .status-section {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+  }
+
+  .status-flows {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  @media(max-width: 700px) { .status-flows { grid-template-columns: 1fr; } }
+
+  .status-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1.5px solid #F1F5F9;
+  }
+  .status-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .status-chain {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .status-pill {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+  .status-arrow { color: #CBD5E1; font-size: 14px; }
+
+  .s-active    { background: #D1FAE5; color: #065F46; }
+  .s-past-due  { background: #FEF3C7; color: #92400E; }
+  .s-cancelled { background: #FFE4E6; color: #9F1239; }
+  .s-pending   { background: #F0F9FF; color: #0369A1; }
+  .s-paid      { background: #D1FAE5; color: #065F46; }
+  .s-selection { background: #EDE9FE; color: #5B21B6; }
+  .s-done      { background: #DBEAFE; color: #1E40AF; }
+  .s-preparing { background: #FEF3C7; color: #92400E; }
+  .s-shipped   { background: #E0F2FE; color: #075985; }
+  .s-delivered { background: #F0FDF4; color: #14532D; }
+
+  /* ── MIGRATION DIAGRAM ── */
+  .migration-section {
+    max-width: 1100px;
+    margin: 0 auto 60px;
+  }
+
+  .migration-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media(max-width: 700px) { .migration-grid { grid-template-columns: 1fr; } }
+
+  .migration-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1.5px solid #F1F5F9;
+    position: relative;
+  }
+  .migration-number {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    color: white;
+    background: linear-gradient(135deg, var(--pink), var(--violet));
+  }
+  .migration-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 12px;
+    margin-top: 8px;
+  }
+  .migration-step {
+    display: flex;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--slate);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .migration-step .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--pink);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .migration-tag {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #FDF2F8;
+    color: #DB2777;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 40px;
+    border-top: 1px solid #E2E8F0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .footer strong {
+    color: var(--navy);
+    font-family: 'Syne', sans-serif;
+  }
+
+  /* animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .uc-card { animation: fadeUp 0.5s ease both; }
+  .uc-card:nth-child(1) { animation-delay: 0.05s; }
+  .uc-card:nth-child(2) { animation-delay: 0.10s; }
+  .uc-card:nth-child(3) { animation-delay: 0.15s; }
+  .uc-card:nth-child(4) { animation-delay: 0.20s; }
+  .uc-card:nth-child(5) { animation-delay: 0.25s; }
+  .uc-card:nth-child(6) { animation-delay: 0.30s; }
+  .uc-card:nth-child(7) { animation-delay: 0.35s; }
+  .uc-card:nth-child(8) { animation-delay: 0.40s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">📦 Beauty Box — Arquitectura v1.0</div>
+  <h1>Casos de <span>Uso</span></h1>
+  <p class="subtitle">Vista lógica del sistema para Product Manager — Flujos, actores y estados clave</p>
+</div>
+
+<!-- ARCHITECTURE MAP -->
+<div class="arch-section">
+  <div class="section-label">Arquitectura de Servicios</div>
+  <div class="arch-map">
+    <div class="arch-label">Capa de Presentación</div>
+    <div class="arch-row">
+      <div class="arch-node highlight">
+        <div class="arch-node-icon">🌐</div>
+        <div class="arch-node-name">Frontend</div>
+        <div class="arch-node-port">App Web / Móvil</div>
+      </div>
+    </div>
+    <div class="arch-row"><span class="arch-arrow">↓ HTTP REST ↓</span></div>
+    <div class="arch-label">Capa de Microservicios</div>
+    <div class="arch-row">
+      <div class="arch-node">
+        <div class="arch-node-icon">👤</div>
+        <div class="arch-node-name">User Service</div>
+        <div class="arch-node-port">:3001</div>
+      </div>
+      <div class="arch-node highlight">
+        <div class="arch-node-icon">🛒</div>
+        <div class="arch-node-name">Checkout Service</div>
+        <div class="arch-node-port">:3002</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-node-icon">💳</div>
+        <div class="arch-node-name">Payments Service</div>
+        <div class="arch-node-port">:3003</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-node-icon">📦</div>
+        <div class="arch-node-name">Order Service</div>
+        <div class="arch-node-port">:3004</div>
+      </div>
+      <div class="arch-node highlight">
+        <div class="arch-node-icon">🔄</div>
+        <div class="arch-node-name">Subscription Service</div>
+        <div class="arch-node-port">:3005</div>
+      </div>
+    </div>
+    <div class="arch-row"><span class="arch-arrow">↕ Kafka Events ↕</span></div>
+    <div class="arch-kafka">
+      <span class="kafka-label">📨 Topics:</span>
+      <span class="kafka-tag">gateway.events.rebill.cl</span>
+      <span class="kafka-tag">gateway.events.flow.cl</span>
+    </div>
+    <div class="arch-row"><span class="arch-arrow">↑ Webhooks ↑</span></div>
+    <div class="arch-label">Pasarelas de Pago</div>
+    <div class="arch-row">
+      <div class="arch-node">
+        <div class="arch-node-icon">💜</div>
+        <div class="arch-node-name">Rebill v3</div>
+        <div class="arch-node-port">Suscripciones</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-node-icon">🔵</div>
+        <div class="arch-node-name">Flow</div>
+        <div class="arch-node-port">HIB Extras</div>
+      </div>
+      <div class="arch-node">
+        <div class="arch-node-icon">🪝</div>
+        <div class="arch-node-name">Webhooks Service</div>
+        <div class="arch-node-port">:3009</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- USE CASES -->
+<div class="flow-section">
+  <div class="section-label">Casos de Uso</div>
+</div>
+
+<div class="use-cases-grid">
+
+  <!-- CU-01 -->
+  <div class="uc-card pink">
+    <div class="uc-header">
+      <div class="uc-icon">🆕</div>
+      <div>
+        <div class="uc-id">CU-01</div>
+        <div class="uc-name">Nueva Suscripción — Usuario Nuevo</div>
+      </div>
+    </div>
+    <div class="uc-actor">👤 Usuaria nueva sin cuenta</div>
+    <ul class="uc-steps">
+      <li><span class="step-num">1</span>Se registra en el sistema</li>
+      <li><span class="step-num">2</span>Elige plan + comuna (define shipping type)</li>
+      <li><span class="step-num">3</span>Frontend crea checkout intent con oldPlanId</li>
+      <li><span class="step-num">4</span>Checkout Service mapea → rebillPlanId</li>
+      <li><span class="step-num">5</span>Paga con tarjeta vía Rebill v3</li>
+      <li><span class="step-num">6</span>Webhook → Kafka → Subscription creada</li>
+    </ul>
+    <div class="uc-result">✅ Suscripción ACTIVE + Cycle #1 SELECTION_PENDING</div>
+  </div>
+
+  <!-- CU-02 -->
+  <div class="uc-card violet">
+    <div class="uc-header">
+      <div class="uc-icon">🔄</div>
+      <div>
+        <div class="uc-id">CU-02</div>
+        <div class="uc-name">Nueva Suscripción — Usuaria Legacy</div>
+      </div>
+    </div>
+    <div class="uc-actor">👵 Usuaria del sistema viejo</div>
+    <ul class="uc-steps">
+      <li><span class="step-num">1</span>Hace login con email + password</li>
+      <li><span class="step-num">2</span>Auth Service busca en BD nueva → no existe</li>
+      <li><span class="step-num">3</span>Busca en BD legacy → migra automáticamente</li>
+      <li><span class="step-num">4</span>JWT generado con nuevo userId</li>
+      <li><span class="step-num">5</span>Elige plan y paga normalmente</li>
+      <li><span class="step-num">6</span>Webhook resuelve userId por email</li>
+    </ul>
+    <div class="uc-result">✅ Usuario migrado + Suscripción activa</div>
+  </div>
+
+  <!-- CU-03 -->
+  <div class="uc-card teal">
+    <div class="uc-header">
+      <div class="uc-icon">♻️</div>
+      <div>
+        <div class="uc-id">CU-03</div>
+        <div class="uc-name">Renovación Automática</div>
+      </div>
+    </div>
+    <div class="uc-actor">🤖 Sistema automático (Rebill)</div>
+    <ul class="uc-steps">
+      <li><span class="step-num">1</span>Rebill cobra según frecuencia del plan</li>
+      <li><span class="step-num">2</span>Webhook normalizado → payment_approved</li>
+      <li><span class="step-num">3</span>Subscription Service verifica idempotencia</li>
+      <li><span class="step-num">4</span>Encuentra suscripción existente</li>
+      <li><span class="step-num">5</span>Crea Cycle #N con nuevo selectionDeadline</li>
+      <li><span class="step-num">6</span>Actualiza nextBillingDate</li>
+    </ul>
+    <div class="uc-result">✅ Nuevo ciclo + completedCycles++</div>
+  </div>
+
+  <!-- CU-04 -->
+  <div class="uc-card amber">
+    <div class="uc-header">
+      <div class="uc-icon">⚠️</div>
+      <div>
+        <div class="uc-id">CU-04</div>
+        <div class="uc-name">Pago Fallido en Renovación</div>
+      </div>
+    </div>
+    <div class="uc-actor">🤖 Sistema automático (Rebill)</div>
+    <ul class="uc-steps">
+      <li><span class="step-num">1</span>Rebill intenta cobrar → falla</li>
+      <li><span class="step-num">2</span>Webhook → payment_failed</li>
+      <li><span class="step-num">3</span>Subscription → PAST_DUE (no se cancela)</li>
+      <li><span class="step-num">4</span>Rebill reintenta automáticamente</li>
+      <li><span class="step-num">5a</span>Reintento OK → ACTIVE + nuevo ciclo</li>
+      <li><span class="step-num">5b</span>Fallo definitivo → webhook cancelled</li>
+    </ul>
+    <div class="uc-result">⚡ Regla: NUNCA cancelar por fallo solo</div>
+  </div>
+
+  <!-- CU-05 -->
+  <div class="uc-card rose">
+    <div class="uc-header">
+      <div class="uc-icon">❌</div>
+      <div>
+        <div class="uc-id">CU-05</div>
+        <div class="uc-name">Cancelación Manual</div>
+      </div>
+    </div>
+    <div class="uc-actor">👤 Usuaria autenticada</div>
+    <ul class="uc-steps">
+      <li><span class="step-num">1</span>POST /subscriptions/:id/cancel + reason</li>
+      <li><span class="step-num">2</span>Subscription Service llama Rebill API</li>
+      <li><span class="step-num">3</span>PATCH /rebill/subscriptions/:id {cancelled}</li>
+      <li><span class="step-num">4</span>Si Rebill confirma → CANCELLED en BD</li>
+      <li><span class="step-num">5</span>Rebill envía webhook de confirmación</li>
+      <li><span class="step-num">6</span>Idempotencia: ya está CANCELLED, skip</li>
+    </ul>
+    <div class="uc-result">✅ cancelledAt guardado, ciclos previos intactos</div>
+  </div>
+
+  <!-- CU-06 -->
+  <div class="uc-card indigo">
+    <div class="uc-header">
+      <div class="uc-icon">🛡️</div>
+      <div>
+        <div class="uc-id">CU-06</div>
+        <div class="uc-name">Cancelación desde Dashboard Rebill</div>
+      </div>
+    </div>
+    <div class="uc-actor">🧑‍💼 Admin via Rebill dashboard</div>
+    <ul class="uc-steps">
+      <li><span class="step-num">1</span>Admin cancela en dashboard de Rebill</li>
+      <li><span class="step-num">2</span>Rebill emite webhook subscription_cancelled</li>
+      <li><span class="step-num">3</span>Webhooks Service normaliza el evento</li>
+      <li><span class="step-num">4</span>Kafka → gateway.events.rebill.cl</li>
+      <li><span class="step-num">5</span>Subscription Service → CANCELLED</li>
+    </ul>
+    <div class="uc-result">✅ Sistema sincronizado automáticamente</div>
+  </div>
+
+  <!-- CU-07 -->
+  <div class="uc-card teal">
+    <div class="uc-header">
+      <div class="uc-icon">🛍️</div>
+      <div>
+        <div class="uc-id">CU-07</div>
+        <div class="uc-name">Compra HIB Extras</div>
+      </div>
+    </div>
+    <div class="uc-actor">👤 Usuaria con suscripción activa</div>
+    <ul class="uc-steps">
+      <li><span class="step-num">1</span>POST /orders/create con productos elegidos</li>
+      <li><span class="step-num">2</span>Order Service valida suscripción activa</li>
+      <li><span class="step-num">3</span>Valida stock desde catálogo legacy</li>
+      <li><span class="step-num">4</span>Calcula envío (gratis +$50k / $3.990)</li>
+      <li><span class="step-num">5</span>Payments crea orden en Flow → paymentUrl</li>
+      <li><span class="step-num">6</span>Webhook Flow → Order PAID</li>
+    </ul>
+    <div class="uc-result">✅ Orden pagada, notificación a Order Service</div>
+  </div>
+
+  <!-- CU-08 -->
+  <div class="uc-card pink">
+    <div class="uc-header">
+      <div class="uc-icon">🚚</div>
+      <div>
+        <div class="uc-id">CU-08</div>
+        <div class="uc-name">Cambio de Tipo de Envío</div>
+      </div>
+    </div>
+    <div class="uc-actor">👤 Usuaria en checkout</div>
+    <ul class="uc-steps">
+      <li><span class="step-num">1</span>Usuaria cambia su comuna</li>
+      <li><span class="step-num">2</span>Frontend obtiene nuevo planType</li>
+      <li><span class="step-num">3</span>PATCH /intent/:id { shippingType: nac2 }</li>
+      <li><span class="step-num">4</span>Checkout busca plan con oldPlanId + shippingType</li>
+      <li><span class="step-num">5</span>Redis cache → MongoDB si miss</li>
+      <li><span class="step-num">6</span>Intent actualizado con nuevo rebillPlanId</li>
+    </ul>
+    <div class="uc-result">✅ Precio y plan actualizados sin perder el intent</div>
+  </div>
+
+</div>
+
+<!-- STATUS FLOWS -->
+<div class="status-section">
+  <div class="section-label">Estados del Sistema</div>
+  <div class="status-flows">
+    <div class="status-card">
+      <div class="status-card-title">🔄 Estados de Suscripción</div>
+      <div class="status-chain">
+        <span class="status-pill s-active">ACTIVE</span>
+        <span class="status-arrow">→</span>
+        <span class="status-pill s-past-due">PAST_DUE</span>
+        <span class="status-arrow">→</span>
+        <span class="status-pill s-active">ACTIVE</span>
+        <span class="status-arrow">→</span>
+        <span class="status-pill s-cancelled">CANCELLED</span>
+      </div>
+      <div style="margin-top:14px; font-size:12px; color:var(--muted); line-height:1.6;">
+        PAST_DUE no es cancelación — Rebill reintenta el cobro. Solo se cancela cuando Rebill lo confirma explícitamente.
+      </div>
+    </div>
+    <div class="status-card">
+      <div class="status-card-title">📦 Estados del Ciclo</div>
+      <div class="status-chain">
+        <span class="status-pill s-paid">PAID</span>
+        <span class="status-arrow">→</span>
+        <span class="status-pill s-selection">SELECTION_PENDING</span>
+        <span class="status-arrow">→</span>
+        <span class="status-pill s-done">SELECTION_DONE</span>
+        <span class="status-arrow">→</span>
+        <span class="status-pill s-preparing">PREPARING</span>
+        <span class="status-arrow">→</span>
+        <span class="status-pill s-shipped">SHIPPED</span>
+        <span class="status-arrow">→</span>
+        <span class="status-pill s-delivered">DELIVERED</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MIGRATION DIAGRAM -->
+<div class="migration-section">
+  <div class="section-label">Migración de Usuarios Legacy</div>
+  <div class="migration-grid">
+    <div class="migration-card">
+      <div class="migration-number">1</div>
+      <div class="migration-title">🔐 Login en Sistema Nuevo</div>
+      <div class="migration-step"><span class="dot"></span>Busca en BD nueva → no existe</div>
+      <div class="migration-step"><span class="dot"></span>Busca en BD legacy → existe</div>
+      <div class="migration-step"><span class="dot"></span>Valida password con mismo hash bcrypt</div>
+      <div class="migration-step"><span class="dot"></span>Crea usuario en BD nueva</div>
+      <div class="migration-step"><span class="dot"></span>Genera JWT con nuevo userId</div>
+      <div class="migration-tag">migrationSource: LOGIN</div>
+    </div>
+    <div class="migration-card">
+      <div class="migration-number">2</div>
+      <div class="migration-title">📨 Webhook Antes del Login</div>
+      <div class="migration-step"><span class="dot"></span>Llega pago con customer.email</div>
+      <div class="migration-step"><span class="dot"></span>resolveUserId() busca por email</div>
+      <div class="migration-step"><span class="dot"></span>No está en BD nueva</div>
+      <div class="migration-step"><span class="dot"></span>Está en BD legacy → migra ahora</div>
+      <div class="migration-step"><span class="dot"></span>Subscription vinculada al userId real</div>
+      <div class="migration-tag">migrationSource: WEBHOOK</div>
+    </div>
+    <div class="migration-card">
+      <div class="migration-number">3</div>
+      <div class="migration-title">🆕 Email Desconocido</div>
+      <div class="migration-step"><span class="dot"></span>No existe en ninguna BD</div>
+      <div class="migration-step"><span class="dot"></span>Crea registro mínimo</div>
+      <div class="migration-step"><span class="dot"></span>status: pending</div>
+      <div class="migration-step"><span class="dot"></span>password: PENDING_RESET</div>
+      <div class="migration-step"><span class="dot"></span>Debe completar registro</div>
+      <div class="migration-tag">Registro mínimo</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>Beauty Box Microservices</strong> — Documentación Técnica v1.0 — Febrero 2026
+  <br>Preparado para Product Manager
+</div>
+
+</body>
+</html>
